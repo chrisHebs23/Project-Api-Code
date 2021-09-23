@@ -13,7 +13,7 @@ const db = require("./db");
 //create server
 const app = express();
 
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 5000;
 
 app.set("view engine", "ejs");
 
@@ -26,7 +26,7 @@ app.use(
   })
 );
 
-var swaggerDefinition = {
+const swaggerDefinition = {
   info: {
     title: "Node Swagger API",
     version: "1.0.0",
@@ -55,6 +55,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
 app.use(flash());
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static());
+}
 
 app.get("/", (req, res) => {
   res.send("Hello");

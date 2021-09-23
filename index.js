@@ -5,7 +5,7 @@ const session = require("express-session");
 const passport = require("passport");
 const flash = require("connect-flash");
 const swaggerJSDoc = require("swagger-jsdoc");
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 
 const mountRoutes = require("./routes");
 

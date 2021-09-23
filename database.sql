@@ -1,33 +1,46 @@
-
-CREATE TABLE "user" (
+CREATE TABLE "users" (
   "id" int PRIMARY KEY,
   "username" varchar(255) UNIQUE,
   "email" varchar(255) UNIQUE,
-  "password" varchar(100),
+  "password" varchar(100)
 );
 
-CREATE TABLE "product" (
+CREATE TABLE "products" (
   "id" serial PRIMARY KEY,
   "product" varchar(255),
   "price" money,
-  "quantity" int,
+  "qty" int
 );
 
-CREATE TABLE "cart" (
+CREATE TABLE "carts" (
   "id" serial PRIMARY KEY,
-  "user_id" INT REFERENCES users(id)
-  "product_id" INT REFERENCES products(id) 
-  "product" varchar(255),
-  "quantity" int,
-  "total_price" money,
+  "userid" INT REFERENCES users(id),
+  "created" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  "modified" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE "order" (
+CREATE TABLE "cartitems" (
   "id" serial PRIMARY KEY,
-  "cart_id" INT  REFERENCES cart(id)
-  "user_id" INT REFERENCES users(id)
-  "product_id" INT REFERENCES products(id) 
-  "product" varchar(255),
-  "quantity" int,
-  "total_price" money,
+  "cartid" INT REFERENCES carts(id),
+  "productid" INT REFERENCES products(id) ,
+  "name" varchar(255),
+  "qty" int,
+  "price" money
+);
+
+CREATE TABLE "orders" (
+  "id" serial PRIMARY KEY,
+  "userid" INT REFERENCES users(id),
+  "created" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  "modified" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE "orderitems" (
+  "id" serial PRIMARY KEY,
+  "orderid" INT REFERENCES orders(id),
+  "productid" INT REFERENCES products(id),
+  "name" varchar(255),
+  "qty" int,
+  "price" money,
+  "created" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

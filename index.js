@@ -5,6 +5,7 @@ const session = require("express-session");
 const passport = require("passport");
 const flash = require("connect-flash");
 const swaggerJSDoc = require("swagger-jsdoc");
+const PORT = process.env.PORT || 5000;
 
 const mountRoutes = require("./routes");
 
@@ -12,8 +13,6 @@ const db = require("./db");
 
 //create server
 const app = express();
-
-const PORT = process.env.PORT || 5000;
 
 app.set("view engine", "ejs");
 

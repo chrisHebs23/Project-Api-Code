@@ -55,9 +55,9 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use(flash());
 
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static());
-}
+// if (process.env.NODE_ENV === "production") {
+//   app.use(express.static(__dirname));
+// }
 
 app.get("/", (req, res) => {
   res.send("Hello");

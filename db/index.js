@@ -10,27 +10,8 @@ const proConfig = process.env.DATABASE_URL;
 const pool = new Pool({
   connectionString:
     process.env.NODE_ENV === "production" ? proConfig : devConfig,
-});
-
-const client = new Client({
-  connectionString:
-    process.env.DATABASE_URL ||
-    "postgresql://postgres:postgres@localhost:5432/projectapi",
   ssl: process.env.DATABASE_URL ? true : false,
 });
-
-client.connect();
-
-client.query(
-  "SELECT table_schema table_name FROM information_schema.tables;",
-  (err, res) => {
-    if (err) throw err;
-    for (let row of res.rows) {
-      console.log(row);
-    }
-    client.end();
-  }
-);
 
 module.exports = {
   query: (text, params, callback) => {

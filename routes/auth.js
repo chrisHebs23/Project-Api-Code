@@ -28,26 +28,26 @@ module.exports = router;
  */
 router.post("/register", async (req, res, next) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, password } = req.body;
     const duplicateUser = await db.query(
-      "SELECT * FROM users WHERE username = $1",
+      "SELECT * FROM admin WHERE admin name = $1",
       [username]
     );
-    const duplicateEmail = await db.query(
-      "SELECT * FROM users WHERE email = $1",
-      [email]
-    );
+    // const duplicateEmail = await db.query(
+    //   "SELECT * FROM users WHERE email = $1",
+    //   [email]
+    // );
 
     if (duplicateUser.rows[0]) {
       console.log;
       res.status(409).send("Username already exists");
-    } else if (duplicateEmail.rows[0]) {
-      res.status(409).send("Email already exists");
+      // } else if (duplicateEmail.rows[0]) {
+      //   res.status(409).send("Email already exists");
     } else {
       const hashedPassword = await bcrypt.hash(password, 11);
       const results = await db.query(
-        "INSERT INTO users (username, email, password) VALUES($1, $2, $3) RETURNING *",
-        [username, email, hashedPassword]
+        "INSERT INTO admin (adminname,  password) VALUES($1, $2) RETURNING *",
+        [username, hashedPassword]
       );
       res.status(201).send(results.rows[0]);
     }

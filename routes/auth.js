@@ -45,7 +45,7 @@ router.post("/register", async (req, res, next) => {
     } else if (duplicateEmail.rows[0]) {
       res.status(409).send("Email already exists");
     } else {
-      const hashedPassword = await bcrypt.hash(password, 11);
+      const hashedPassword = await bcrypt.hash(password, 10);
       const results = await db.query(
         "INSERT INTO users (username, email, password) VALUES($1, $2, $3) RETURNING *",
         [username, email, hashedPassword]

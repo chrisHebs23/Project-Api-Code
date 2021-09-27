@@ -1,6 +1,5 @@
 const Router = require("express-promise-router");
 const db = require("../db");
-const isUserAuthenticated = require("../services/auth");
 
 const router = new Router();
 

@@ -6,19 +6,38 @@ const flash = require("connect-flash");
 
 module.exports = () => {
   passport.use(
-    new Strategy(function (username, password, cb) {
-      db.query(
+    new Strategy(async function (username, password, cb) {
+      await db.query(
         "SELECT * FROM admin WHERE adminname = $1",
         [username],
         async (err, results) => {
           if (err) {
             return cb(err);
           }
-          if (!results) {
+          //admin login
+          if (results.rows[0]) {
+            bcrypt.compare(password, results.rows[0].password, (err, hash) => {
+              if (err) {
+                return cb(err);
+              }
+              if (!hash) {
+                return cb(
+                  null,
+                  false,
+                  flash("loginMessage", "Wrong Password or Username")
+                );
+              } else {
+                admin = results.rows[0];
+                return cb(null, admin);
+              }
+            });
+          }
+          //user login
+          if (!results.rows[0]) {
             await db.query(
               `SELECT * FROM users WHERE username = $1`,
               [username],
-              (error, result) => {
+              async (error, result) => {
                 if (error) {
                   return cb(error);
                 }
@@ -29,7 +48,7 @@ module.exports = () => {
                 }
                 bcrypt.compare(
                   password,
-                  results.rows[0].password,
+                  result.rows[0].password,
                   (err, hash) => {
                     if (err) {
                       return cb(err);
@@ -41,7 +60,7 @@ module.exports = () => {
                         flash("loginMessage", "Wrong Password or Username")
                       );
                     } else {
-                      user = results.rows[0];
+                      user = result.rows[0];
                       return cb(null, user);
                     }
                   }

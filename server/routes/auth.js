@@ -50,15 +50,12 @@ router.post("/register", async (req, res, next) => {
         "INSERT INTO users (username, email, password) VALUES($1, $2, $3) RETURNING *",
         [username, email, hashedPassword]
       );
-      res.status(201).send(results.rows[0]);
+      const user = results.rows[0];
+      res.json(user);
     }
   } catch (error) {
     throw error;
   }
-});
-
-router.get("/login", (req, res) => {
-  res.render("login", { message: req.flash("loginMessage") });
 });
 
 // login
@@ -79,12 +76,29 @@ router.get("/login", (req, res) => {
  */
 router.post(
   "/login",
-  passport.authenticate("local", {
-    successRedirect: "/user/profile",
-    failureRedirect: "/auth/login",
-    failureFlash: true,
-  })
+  (req, res, next) => {
+    console.log("routes/user.js, login, req.body: ");
+    next();
+  },
+  passport.authenticate("local"),
+  (req, res) => {
+    console.log("logged in", req.user.username);
+    var userInfo = {
+      username: req.user.username,
+    };
+    res.send(userInfo);
+  }
 );
+
+router.get("/", (req, res, next) => {
+  console.log("===== user!!======");
+  console.log(req.user);
+  if (req.user) {
+    res.json({ user: req.user });
+  } else {
+    res.json({ user: null });
+  }
+});
 
 //logout
 /**
